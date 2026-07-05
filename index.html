@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Do'stlik Sinovi | Premium TWA</title>
     
+    <!-- Telegram Web App SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
     <style>
@@ -15,7 +17,6 @@
             --bg-gradient-start: #0f172a;
             --bg-gradient-end: #09090b;
             --primary-glow: rgba(99, 102, 241, 0.5);
-            --success-glow: rgba(16, 185, 129, 0.5);
         }
 
         body {
@@ -27,12 +28,7 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* Maxsus Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 10px; }
-
-        /* Shisha effekti (Glassmorphism) */
+        /* Shisha effekti */
         .glass-panel {
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(16px);
@@ -52,7 +48,6 @@
         .animate-float { animation: floatEffect 4s ease-in-out infinite; }
         .btn-glow:hover { animation: pulseGlow 1.5s infinite; }
         
-        /* Loader */
         .loader-spinner {
             width: 50px; height: 50px;
             border: 4px solid rgba(255, 255, 255, 0.1);
@@ -62,7 +57,6 @@
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* Toast Xabarlar */
         #toast-container {
             position: fixed; top: 20px; right: 20px; left: 20px;
             z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none;
@@ -76,7 +70,6 @@
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
         }
 
-        /* Tugmalar effekti */
         .option-btn { transition: all 0.2s ease; }
         .option-btn:active { transform: scale(0.97); background: rgba(99, 102, 241, 0.2); border-color: #6366f1; }
     </style>
@@ -85,15 +78,18 @@
 
     <div id="toast-container"></div>
 
+    <!-- Boshlang'ich Loader -->
     <div id="splash-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#0f172a] transition-opacity duration-500">
         <div class="loader-spinner mb-4"></div>
-        <h2 class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-cyan-400">
-            Tayyorlanmoqda...
+        <h2 id="splash-text" class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-cyan-400">
+            Yuklanmoqda...
         </h2>
     </div>
 
+    <!-- ASOSIY KONTEYNER -->
     <main class="w-full max-w-md glass-panel rounded-3xl p-6 sm:p-8 hidden relative z-10" id="app-content">
         
+        <!-- QADAM 1: KIRISH (DINAMIK MATN) -->
         <div id="step-1" class="flex flex-col items-center space-y-6 animate-slide-up">
             <div class="w-24 h-24 bg-gradient-to-tr from-indigo-500 to-purple-500 rounded-full flex items-center justify-center animate-float shadow-2xl shadow-indigo-500/40 border-4 border-slate-800 relative">
                 <div class="absolute inset-0 bg-white opacity-20 rounded-full blur-md"></div>
@@ -103,31 +99,32 @@
             </div>
             
             <div class="text-center space-y-2">
-                <h1 class="text-3xl font-extrabold tracking-tight text-white">
+                <h1 id="welcome-title" class="text-3xl font-extrabold tracking-tight text-white">
                     Sizni kim yaxshi biladi?
                 </h1>
-                <p class="text-slate-400 text-sm leading-relaxed">
+                <p id="welcome-desc" class="text-slate-400 text-sm leading-relaxed">
                     O'zingiz haqida 5 ta savolga javob bering va sirlaringizni do'stlaringiz qanchalik bilishini sinab ko'ring.
                 </p>
             </div>
 
             <div class="w-full space-y-3 mt-4">
-                <label class="block text-xs font-bold text-indigo-400 uppercase tracking-widest ml-1">Ismingiz (yoki laqabingiz)</label>
+                <label class="block text-xs font-bold text-indigo-400 uppercase tracking-widest ml-1">Ismingizni kiriting</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                         <svg class="h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                     </div>
-                    <input type="text" id="user-name-input" maxlength="20" placeholder="Masalan: Sardor" 
+                    <input type="text" id="user-name-input" maxlength="15" placeholder="Masalan: Sardor" 
                            class="w-full bg-slate-900/60 border border-slate-700 rounded-xl pl-11 pr-4 py-4 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all shadow-inner font-medium text-lg">
                 </div>
             </div>
 
-            <button onclick="startQuiz()" class="btn-glow w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold py-4 rounded-xl shadow-lg transition-all transform active:scale-95 flex items-center justify-center gap-2 mt-2">
-                <span>Savollarni tanlash</span>
+            <button onclick="startQuiz()" id="start-btn" class="btn-glow w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold py-4 rounded-xl shadow-lg transition-all transform active:scale-95 flex items-center justify-center gap-2 mt-2">
+                <span>Testni boshlash</span>
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
             </button>
         </div>
 
+        <!-- QADAM 2: SAVOLLAR REJIMI -->
         <div id="step-2" class="hidden flex-col space-y-6 w-full">
             <div class="flex justify-between items-end mb-2">
                 <div class="space-y-1">
@@ -145,55 +142,68 @@
 
             <div class="glass-panel p-5 rounded-2xl border-l-4 border-l-indigo-500 mt-6 relative overflow-hidden">
                 <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-indigo-500/10 rounded-full blur-xl"></div>
-                <h2 id="current-question-text" class="text-xl font-semibold text-white leading-tight relative z-10">
-                    Yuklanmoqda...
-                </h2>
+                <h2 id="current-question-text" class="text-xl font-semibold text-white leading-tight relative z-10">Savol yuklanmoqda...</h2>
             </div>
 
-            <div id="options-wrapper" class="space-y-3 mt-4">
-                </div>
+            <div id="options-wrapper" class="space-y-3 mt-4"></div>
         </div>
 
-        <div id="step-3" class="hidden flex-col space-y-5 animate-slide-up w-full">
+        <!-- QADAM 3: YARATUVCHI UCHUN REVIEW -->
+        <div id="step-3-creator" class="hidden flex-col space-y-5 animate-slide-up w-full">
             <div class="text-center">
                 <h2 class="text-2xl font-bold text-white mb-2">Sizning tanlovlaringiz</h2>
                 <p class="text-sm text-slate-400">Do'stlaringiz aynan shu javoblarni topishi kerak bo'ladi.</p>
             </div>
-            
-            <div id="review-list" class="space-y-3 max-h-[300px] overflow-y-auto pr-1">
-                </div>
-
-            <button onclick="generateLink()" class="w-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-emerald-500/20 active:scale-95 transition-all mt-4 flex justify-center items-center gap-2">
+            <div id="review-list" class="space-y-3 max-h-[300px] overflow-y-auto pr-1"></div>
+            <button onclick="generateLink()" class="w-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-bold py-4 rounded-xl shadow-lg active:scale-95 transition-all mt-4 flex justify-center items-center gap-2">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                 Tasdiqlash va Link Olish
             </button>
         </div>
 
-        <div id="step-4" class="hidden flex-col items-center space-y-6 text-center animate-slide-up w-full relative">
+        <!-- QADAM 3-B: DO'ST UCHUN NATIJA EKRANI -->
+        <div id="step-3-friend" class="hidden flex-col items-center space-y-6 text-center animate-slide-up w-full">
+            <div id="friend-confetti" class="absolute inset-0 pointer-events-none overflow-hidden rounded-3xl opacity-20"></div>
             
-            <div id="confetti-layer" class="absolute inset-0 pointer-events-none overflow-hidden rounded-3xl opacity-30 z-0"></div>
+            <div class="w-24 h-24 bg-indigo-500/10 rounded-full flex items-center justify-center border border-indigo-500/30 relative">
+                <span id="score-emoji" class="text-5xl">🎯</span>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-white">Natijangiz tayyor!</h2>
+                <p id="friend-score-text" class="text-lg text-indigo-400 font-bold mt-1">Siz 5 tadan 0 tasini topdingiz</p>
+                <p id="friend-comment" class="text-xs text-slate-400 mt-1 px-4"></p>
+            </div>
 
+            <div id="friend-summary-list" class="w-full space-y-3 max-h-[220px] overflow-y-auto pr-1 text-left"></div>
+
+            <button onclick="reloadAsCreator()" class="w-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold py-4 rounded-xl shadow-lg active:scale-95 transition-all flex justify-center items-center gap-2">
+                <span>O'z testingizni yaratish</span>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            </button>
+        </div>
+
+        <!-- QADAM 4: LINK ULASHISH (FAQAT YARATUVCHI UCHUN) -->
+        <div id="step-4" class="hidden flex-col items-center space-y-6 text-center animate-slide-up w-full relative">
+            <div id="confetti-layer" class="absolute inset-0 pointer-events-none overflow-hidden rounded-3xl opacity-30 z-0"></div>
             <div class="w-20 h-20 bg-emerald-500/20 rounded-full flex items-center justify-center border border-emerald-500/30 animate-float relative z-10">
                 <span class="text-5xl">🎉</span>
             </div>
-            
             <div class="relative z-10">
                 <h1 class="text-2xl font-bold text-emerald-400">Ajoyib, tayyor!</h1>
                 <p class="text-slate-300 text-sm mt-2 leading-relaxed">
-                    Test muvaffaqiyatli yaratildi. Endi ushbu ssilkani do'stlaringizga yuboring va natijalarni botda kuting.
+                    Test muvaffaqiyatli yaratildi. Endi ushbu ssilkani do'stlaringizga yuboring va natijalarni kuting.
                 </p>
             </div>
-
             <div class="w-full bg-slate-900/80 p-1 rounded-2xl border border-slate-700 flex items-center justify-between mt-4 relative z-10">
                 <div class="pl-4 py-3 overflow-hidden text-left">
                     <p class="text-[10px] uppercase text-indigo-400 font-bold mb-1 tracking-wider">Sizning maxsus havolangiz</p>
                     <p id="generated-link-display" class="text-sm text-white truncate w-[200px] font-mono">Yuklanmoqda...</p>
                 </div>
-                <button onclick="copyGeneratedLink()" class="bg-indigo-600 hover:bg-indigo-700 text-white p-3 mr-1 rounded-xl transition-colors shrink-0 cursor-pointer">
+                <button onclick="copyGeneratedLink()" class="bg-indigo-600 hover:bg-indigo-700 text-white p-3 mr-1 rounded-xl transition-colors shrink-0">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
                 </button>
             </div>
-
             <button onclick="openTelegramShare()" class="w-full bg-gradient-to-r from-[#0088cc] to-[#00a2ff] text-white font-bold py-4 rounded-xl shadow-[0_0_20px_rgba(0,136,204,0.3)] active:scale-95 transition-all flex justify-center items-center gap-3 mt-6 relative z-10">
                 <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.223-.548.223l.188-2.85 5.18-4.686c.223-.195-.054-.285-.346-.09l-6.4 4.024-2.76-.86c-.6-.185-.61-.6.125-.89l10.736-4.133c.5-.185.945.11.725.99z"/></svg>
                 <span>Telegram orqali ulashish</span>
@@ -212,37 +222,40 @@
         tg.expand();
         if (tg.setHeaderColor) tg.setHeaderColor('#0f172a'); 
 
-        // BU YERDA SIZNING BOTINGIZ NOMI QAT'IY BELGILANDI (Muammo shu yerda edi)
         const BOT_USERNAME = "DostlikSinov_bot";
-        const USER_ID = tg.initDataUnsafe?.user?.id || Math.floor(Math.random() * 9999999);
 
         const screens = {
             splash: document.getElementById("splash-screen"),
             app: document.getElementById("app-content"),
             step1: document.getElementById("step-1"),
             step2: document.getElementById("step-2"),
-            step3: document.getElementById("step-3"),
+            step3Creator: document.getElementById("step-3-creator"),
+            step3Friend: document.getElementById("step-3-friend"),
             step4: document.getElementById("step-4"),
             footer: document.getElementById("footer-text")
         };
 
         const allQuestionsDatabase = [
             { id: 1, text: "Dam olish kuningni qanday o'tkazishni yoqtirasan?", options: ["Uyda kino/serial ko'rib", "Do'stlar bilan ko'chada aylanish", "Uyqu va dam olish", "Kompyuter o'yinlari o'ynash"] },
-            { id: 2, text: "Senga qaysi turdagi taom ko'proq yoqadi?", options: ["Milliy taomlar (Palov, Shashlik)", "Fast-food (Burger, Pitsa)", "Shirinliklar va pishiriqlar", "Sog'lom (Diet) ovqatlar"] },
+            { id: 2, text: "Senga qaysi turdagi taom ko'proq yoqadi?", options: ["Milliy taomlar (Palov)", "Fast-food (Burger, Pitsa)", "Shirinliklar va pishiriqlar", "Sog'lom (Diet) ovqatlar"] },
             { id: 3, text: "Hayotdagi eng katta maqsading nima?", options: ["Juda ko'p pul topish", "Oila qurib, baxtli yashash", "Dunyoni sayohat qilish", "Katta biznes/loyiha yaratish"] },
             { id: 4, text: "Qanday filmlarni yoqtirasan?", options: ["Komediya (Kulish uchun)", "Qo'rqinchli (Horror)", "Fantastika / Marvel", "Jangari (Boevik)"] },
-            { id: 5, text: "Sening eng yomon odating qaysi?", options: ["Tez jahlim chiqadi", "Juda ko'p uxlayman", "O'jarlik va qaysarlik", "Ishlarni ertaga qoldirish (Dangasalik)"] },
-            { id: 6, text: "Qaysi faslni eng ko'p yoqtirasan?", options: ["Bahor (Yashillik)", "Yoz (Issiq, Cho'milish)", "Kuz (Sariq barglar, Yomg'ir)", "Qish (Qor, Yangi yil)"] },
+            { id: 5, text: "Sening eng yomon odating qaysi?", options: ["Tez jahlim chiqadi", "Juda ko'p uxlayman", "O'jarlik va qaysarlik", "Ishlarni ertaga qoldirish"] },
+            { id: 6, text: "Qaysi faslni eng ko'p yoqtirasan?", options: ["Bahor (Yashillik)", "Yoz (Issiq, Cho'milish)", "Kuz (Yomg'ir)", "Qish (Qor, Yangi yil)"] },
             { id: 7, text: "Telefoningda qaysi ilovada eng ko'p vaqt o'tkazasan?", options: ["Telegram", "Instagram", "TikTok", "YouTube"] },
             { id: 8, text: "Agar super kuching bo'lsa, qaysini tanlarding?", options: ["Uchish qobiliyati", "Odamlar o'yini o'qish", "Vaqtni orqaga qaytarish", "Ko'rinmas bo'lish"] }
         ];
 
         const TOTAL_QUESTIONS = 5;
         let selectedQuestions = [];
-        let userAnswersData = [];
+        let creatorAnswers = {}; // {questionId: answerIndex} -> Do'stlar solishtirishi uchun
+        let userAnswersData = []; // Hozirgi foydalanuvchi javoblari
         let currentQIndex = 0;
         let userName = "";
+        let creatorName = "";
         let finalGeneratedLink = "";
+        let isFriendMode = false;
+        let friendScore = 0;
 
         function shuffleArray(array) {
             let curId = array.length;
@@ -255,6 +268,58 @@
             }
             return array;
         }
+
+        // REJIMNI ANIQLASH (YARATUVCHIMI YOKI DO'ST?)
+        window.onload = function() {
+            // Telegramdan yoki URL ssilkadan start parametrni tekshirish
+            const startParam = tg.initDataUnsafe?.start_param || new URLSearchParams(window.location.search).get('start');
+            
+            if (startParam && startParam.includes('_')) {
+                // Ssilka formati: Ism_SavolJavobKodlari (Masalan: Sardor_1021334052)
+                try {
+                    isFriendMode = true;
+                    const parts = startParam.split('_');
+                    creatorName = decodeURIComponent(parts[0]);
+                    const code = parts[1]; // Masalan: "1021334052" -> Q1-A0, Q2-A1...
+
+                    selectedQuestions = [];
+                    creatorAnswers = {};
+
+                    // Shifrlangan kodni ochish (Har 2 ta raqam bitta savol va javob)
+                    for (let i = 0; i < code.length; i += 2) {
+                        let qId = parseInt(code[i]);
+                        let ansIdx = parseInt(code[i+1]);
+                        let question = allQuestionsDatabase.find(q => q.id === qId);
+                        if (question) {
+                            selectedQuestions.push(question);
+                            creatorAnswers[qId] = ansIdx;
+                        }
+                    }
+
+                    // Splash matnini o'zgartirish
+                    document.getElementById("splash-text").innerText = `${creatorName}ning testi yuklanmoqda...`;
+                    
+                    // Kirish ekranini moslashtirish
+                    document.getElementById("welcome-title").innerText = `${creatorName}ni qanchalik bilasiz?`;
+                    document.getElementById("welcome-desc").innerText = `${creatorName} o'zi haqida 5 ta savolga javob berdi. Qani ko'raylikchi, siz uni qanchalik aniq topa olasiz?`;
+                    document.getElementById("start-btn").querySelector("span").innerText = "Sinovni boshlash";
+
+                } catch (e) {
+                    isFriendMode = false;
+                    console.error("Parametr xatosi, standart rejim yoqildi.");
+                }
+            }
+
+            // Loader'ni o'chirish
+            setTimeout(() => {
+                screens.splash.style.opacity = "0";
+                setTimeout(() => {
+                    screens.splash.classList.add("hidden");
+                    screens.app.classList.remove("hidden");
+                    screens.footer.classList.remove("hidden");
+                }, 500);
+            }, 1200);
+        };
 
         function showToast(message, type = "success") {
             const container = document.getElementById("toast-container");
@@ -269,11 +334,9 @@
                 <span>${message}</span>
             `;
             container.appendChild(toast);
-            
             if (tg.HapticFeedback) {
                 type === 'error' ? tg.HapticFeedback.notificationOccurred('error') : tg.HapticFeedback.notificationOccurred('success');
             }
-
             setTimeout(() => {
                 toast.style.animation = "fadeOut 0.3s forwards";
                 setTimeout(() => toast.remove(), 300);
@@ -287,15 +350,6 @@
             showElem.classList.add("flex");
         }
 
-        setTimeout(() => {
-            screens.splash.style.opacity = "0";
-            setTimeout(() => {
-                screens.splash.classList.add("hidden");
-                screens.app.classList.remove("hidden");
-                screens.footer.classList.remove("hidden");
-            }, 500);
-        }, 1500); 
-
         function startQuiz() {
             const input = document.getElementById("user-name-input");
             const name = input.value.trim();
@@ -307,11 +361,14 @@
             }
 
             userName = name;
-            let shuffledDB = shuffleArray([...allQuestionsDatabase]);
-            selectedQuestions = shuffledDB.slice(0, TOTAL_QUESTIONS);
-            
             currentQIndex = 0;
             userAnswersData = [];
+
+            // Agar oddiy rejim bo'lsa, tasodifiy 5 ta savol tanlaymiz
+            if (!isFriendMode) {
+                let shuffledDB = shuffleArray([...allQuestionsDatabase]);
+                selectedQuestions = shuffledDB.slice(0, TOTAL_QUESTIONS);
+            }
 
             switchScreen(screens.step1, screens.step2);
             renderCurrentQuestion();
@@ -324,7 +381,13 @@
             document.getElementById("question-indicator").innerText = `Savol ${currentQIndex + 1} / ${TOTAL_QUESTIONS}`;
 
             const qData = selectedQuestions[currentQIndex];
-            document.getElementById("current-question-text").innerText = qData.text;
+            
+            // Do'st rejimida savol matnini moslashtirish (masalan: "Sardor dam olish kunini...")
+            if (isFriendMode) {
+                document.getElementById("current-question-text").innerText = qData.text.replace("yoqtirasan?", "yoqtiradi deb o'ylaysiz?").replace("odating qaysi?", "odati qaysi?");
+            } else {
+                document.getElementById("current-question-text").innerText = qData.text;
+            }
 
             const optionsContainer = document.getElementById("options-wrapper");
             optionsContainer.innerHTML = "";
@@ -356,27 +419,44 @@
             btnElement.classList.add("border-indigo-500", "bg-indigo-500/20");
             btnElement.querySelector(".opacity-0").classList.remove("opacity-0");
 
+            const currentQuestion = selectedQuestions[currentQIndex];
+
+            // Javobni saqlash
             userAnswersData.push({
-                questionId: selectedQuestions[currentQIndex].id,
-                questionText: selectedQuestions[currentQIndex].text,
+                questionId: currentQuestion.id,
+                questionText: currentQuestion.text,
                 selectedAnswer: optionText,
                 answerIndex: selectedOptionIndex
             });
+
+            // Agar Do'st rejimida bo'lsa, ballni hisoblash
+            if (isFriendMode) {
+                const correctIdx = creatorAnswers[currentQuestion.id];
+                if (selectedOptionIndex === correctIdx) {
+                    friendScore++;
+                }
+            }
 
             setTimeout(() => {
                 currentQIndex++;
                 if (currentQIndex < TOTAL_QUESTIONS) {
                     renderCurrentQuestion();
                 } else {
-                    prepareReviewStep();
+                    document.getElementById("progress-bar-fill").style.width = `100%`;
+                    document.getElementById("percent-indicator").innerText = `100%`;
+                    
+                    // Rejimga qarab mos ekran chiqarish
+                    if (isFriendMode) {
+                        showFriendResults();
+                    } else {
+                        prepareReviewStep();
+                    }
                 }
             }, 400); 
         }
 
+        // YARATUVCHI EKRANI: REVIEW
         function prepareReviewStep() {
-            document.getElementById("progress-bar-fill").style.width = `100%`;
-            document.getElementById("percent-indicator").innerText = `100%`;
-
             const listContainer = document.getElementById("review-list");
             listContainer.innerHTML = "";
 
@@ -394,11 +474,75 @@
                 listContainer.appendChild(item);
             });
 
-            switchScreen(screens.step2, screens.step3);
+            switchScreen(screens.step2, screens.step3Creator);
         }
 
-        function triggerConfetti() {
-            const container = document.getElementById("confetti-layer");
+        // DO'ST EKRANI: NATIJALAR TAHLILI
+        function showFriendResults() {
+            document.getElementById("friend-score-text").innerText = `Siz 5 tadan ${friendScore} tasini to'g'ri topdingiz!`;
+            
+            // Izoh va emoji tanlash
+            let comment = "";
+            let emoji = "🎯";
+            if(friendScore === 5) { comment = `Daxshat! Siz ${creatorName}ni mukammal bilasiz. Haqiqiy eng yaqin do'st!`; emoji = "👑"; animateConfetti("friend-confetti"); }
+            else if(friendScore >= 3) { comment = "Yomon emas! Bir-biringizni ancha yaxshi bilasiz."; emoji = "😎"; }
+            else { comment = `${creatorName} bilan ko'proq suhbatlashishingiz kerak ekan.`; emoji = "🙈"; }
+            
+            document.getElementById("score-emoji").innerText = emoji;
+            document.getElementById("friend-comment").innerText = comment;
+
+            // Savolma-savol tahlil ro'yxati
+            const summaryContainer = document.getElementById("friend-summary-list");
+            summaryContainer.innerHTML = "";
+
+            userAnswersData.forEach((ans, i) => {
+                const correctIdx = creatorAnswers[ans.questionId];
+                const creatorQuestion = selectedQuestions[i];
+                const creatorRealAnswerText = creatorQuestion.options[correctIdx];
+                const isCorrect = ans.answerIndex === correctIdx;
+
+                const card = document.createElement("div");
+                card.className = `p-3 rounded-xl border ${isCorrect ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-red-500/10 border-red-500/30'}`;
+                
+                card.innerHTML = `
+                    <p class="text-xs font-bold ${isCorrect ? 'text-emerald-400' : 'text-red-400'} mb-1">${isCorrect ? '✓ To\'g\'ri' : '✗ Noto\'g\'ri'}</p>
+                    <p class="text-xs text-white font-semibold mb-2">${ans.questionText}</p>
+                    <div class="text-[11px] space-y-0.5">
+                        <p class="text-slate-400">Sizning javob: <span class="text-white">${ans.selectedAnswer}</span></p>
+                        ${!isCorrect ? `<p class="text-slate-400">${creatorName}ning javobi: <span class="text-emerald-400 font-medium">${creatorRealAnswerText}</span></p>` : ''}
+                    </div>
+                `;
+                summaryContainer.appendChild(card);
+            });
+
+            switchScreen(screens.step2, screens.step3Friend);
+        }
+
+        // HAVOLA YARATISH VA SHIFRLASH (ENG MUKAMMAL QISM)
+        function generateLink() {
+            if(tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+            
+            // Javoblarni ixcham kodga aylantiramiz (Masalan: Q1Id + AnsIndex + Q2Id + AnsIndex...)
+            let encodedCode = "";
+            userAnswersData.forEach(ans => {
+                encodedCode += `${ans.questionId}${ans.answerIndex}`;
+            });
+
+            // Ismni ssilka ichida buzilmasligi uchun tozalash va formatlash
+            const safeName = encodeURIComponent(userName.replace(/[^a-zA-Z0-9а-яА-Яоʻo'gʻg']/g, ""));
+            
+            // Yakuniy ssilka parametri
+            const startParam = `${safeName}_${encodedCode}`;
+            finalGeneratedLink = `https://t.me/${BOT_USERNAME}?start=${startParam}`;
+            
+            document.getElementById("generated-link-display").innerText = finalGeneratedLink;
+            
+            switchScreen(screens.step3Creator, screens.step4);
+            animateConfetti("confetti-layer"); 
+        }
+
+        function animateConfetti(layerId) {
+            const container = document.getElementById(layerId);
             container.innerHTML = "";
             const emojis = ['🎉', '✨', '🔥', '💙', '🚀'];
             for (let i = 0; i < 15; i++) {
@@ -414,34 +558,10 @@
             }
         }
 
-        function generateLink() {
-            if(tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-            
-            const randomCode = Math.random().toString(36).substring(2, 10);
-            const quizId = `${USER_ID}_${randomCode}`;
-            
-            // LINK YARATISH LOGIKASI IDEALLASHTIRILDI
-            finalGeneratedLink = `https://t.me/${BOT_USERNAME}?start=${quizId}`;
-            
-            document.getElementById("generated-link-display").innerText = finalGeneratedLink;
-            
-            switchScreen(screens.step3, screens.step4);
-            triggerConfetti(); // Bayramona effektni yoqish
-            
-            // Backend saqlash funksiyasi (agar kerak bo'lsa)
-            /*
-            fetch('/api/save-quiz', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name: userName, tg_id: USER_ID, answers: userAnswersData, code: quizId })
-            });
-            */
-        }
-
         function copyGeneratedLink() {
             if (navigator.clipboard && window.isSecureContext) {
                 navigator.clipboard.writeText(finalGeneratedLink).then(() => {
-                    showToast("Havola muvaffaqiyatli nusxalandi!");
+                    showToast("Havola nusxalandi!");
                 });
             } else {
                 let textArea = document.createElement("textarea");
@@ -462,23 +582,23 @@
             }
         }
 
-        // TELEGRAM ULASHISH LOGIKASI MUKAMMALLASHTIRILDI
         function openTelegramShare() {
             const shareText = `🔥 ${userName} sizni do'stlik sinoviga chorlaydi!\n\nUni qanchalik yaxshi bilishingizni isbotlang 👇`;
-            
-            // Havola va matnni URL standartlariga moslab formatlash
             const urlEncoded = encodeURIComponent(finalGeneratedLink);
             const textEncoded = encodeURIComponent(shareText);
-            
             const tgShareLink = `https://t.me/share/url?url=${urlEncoded}&text=${textEncoded}`;
-            
             try {
-                // TWA ning o'zining rasmiy ochish funksiyasi
                 tg.openTelegramLink(tgShareLink);
             } catch (error) {
-                // Agar eski versiya Telegram bo'lsa, oddiy brauzer kabi ochish (Fallback)
                 window.location.href = tgShareLink;
             }
+        }
+
+        // DO'ST TESTNI TUGATGACH, O'ZI REJTRIGER BO'LIB YANGI TEST YARATISHI UCHUN
+        function reloadAsCreator() {
+            isFriendMode = false;
+            creatorName = "";
+            window.location.href = window.location.pathname; // Ilovani toza rejimda qayta yuklash
         }
     </script>
 </body>
