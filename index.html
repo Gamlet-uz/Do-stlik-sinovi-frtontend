@@ -44,7 +44,7 @@
         /* Animatsiyalar */
         @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; visibility: hidden; } }
         @keyframes slideInUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        @keyframes floatEffect { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+        @keyframes floatEffect { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-15px) rotate(5deg); } }
         @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 15px var(--primary-glow); } 50% { box-shadow: 0 0 35px var(--primary-glow); } }
         @keyframes slideInRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
 
@@ -81,22 +81,23 @@
         .option-btn:active { transform: scale(0.97); background: rgba(99, 102, 241, 0.2); border-color: #6366f1; }
     </style>
 </head>
-<body class="flex flex-col items-center justify-center p-4">
+<body class="flex flex-col items-center justify-center p-4 relative">
 
     <div id="toast-container"></div>
 
     <div id="splash-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#0f172a] transition-opacity duration-500">
         <div class="loader-spinner mb-4"></div>
         <h2 class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-cyan-400">
-            SmartStudio tayyorlamoqda...
+            Tayyorlanmoqda...
         </h2>
     </div>
 
-    <main class="w-full max-w-md glass-panel rounded-3xl p-6 sm:p-8 w-full hidden" id="app-content">
+    <main class="w-full max-w-md glass-panel rounded-3xl p-6 sm:p-8 hidden relative z-10" id="app-content">
         
         <div id="step-1" class="flex flex-col items-center space-y-6 animate-slide-up">
-            <div class="w-24 h-24 bg-gradient-to-tr from-indigo-500 to-purple-500 rounded-full flex items-center justify-center animate-float shadow-2xl shadow-indigo-500/40 border-4 border-slate-800">
-                <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="w-24 h-24 bg-gradient-to-tr from-indigo-500 to-purple-500 rounded-full flex items-center justify-center animate-float shadow-2xl shadow-indigo-500/40 border-4 border-slate-800 relative">
+                <div class="absolute inset-0 bg-white opacity-20 rounded-full blur-md"></div>
+                <svg class="w-12 h-12 text-white relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
                 </svg>
             </div>
@@ -168,29 +169,32 @@
             </button>
         </div>
 
-        <div id="step-4" class="hidden flex-col items-center space-y-6 text-center animate-slide-up w-full">
-            <div class="w-20 h-20 bg-emerald-500/20 rounded-full flex items-center justify-center border border-emerald-500/30 animate-float">
+        <div id="step-4" class="hidden flex-col items-center space-y-6 text-center animate-slide-up w-full relative">
+            
+            <div id="confetti-layer" class="absolute inset-0 pointer-events-none overflow-hidden rounded-3xl opacity-30 z-0"></div>
+
+            <div class="w-20 h-20 bg-emerald-500/20 rounded-full flex items-center justify-center border border-emerald-500/30 animate-float relative z-10">
                 <span class="text-5xl">🎉</span>
             </div>
             
-            <div>
+            <div class="relative z-10">
                 <h1 class="text-2xl font-bold text-emerald-400">Ajoyib, tayyor!</h1>
                 <p class="text-slate-300 text-sm mt-2 leading-relaxed">
-                    Test muvaffaqiyatli yaratildi. Endi uni guruhlarga yoki do'stlaringizga yuborib, natijalarni kuting.
+                    Test muvaffaqiyatli yaratildi. Endi ushbu ssilkani do'stlaringizga yuboring va natijalarni botda kuting.
                 </p>
             </div>
 
-            <div class="w-full bg-slate-900/80 p-1 rounded-2xl border border-slate-700 flex items-center justify-between mt-4">
+            <div class="w-full bg-slate-900/80 p-1 rounded-2xl border border-slate-700 flex items-center justify-between mt-4 relative z-10">
                 <div class="pl-4 py-3 overflow-hidden text-left">
                     <p class="text-[10px] uppercase text-indigo-400 font-bold mb-1 tracking-wider">Sizning maxsus havolangiz</p>
-                    <p id="generated-link-display" class="text-sm text-white truncate w-[200px] font-mono">t.me/bot?start=123</p>
+                    <p id="generated-link-display" class="text-sm text-white truncate w-[200px] font-mono">Yuklanmoqda...</p>
                 </div>
                 <button onclick="copyGeneratedLink()" class="bg-indigo-600 hover:bg-indigo-700 text-white p-3 mr-1 rounded-xl transition-colors shrink-0 cursor-pointer">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
                 </button>
             </div>
 
-            <button onclick="openTelegramShare()" class="w-full bg-gradient-to-r from-[#0088cc] to-[#00a2ff] text-white font-bold py-4 rounded-xl shadow-[0_0_20px_rgba(0,136,204,0.3)] active:scale-95 transition-all flex justify-center items-center gap-3 mt-6">
+            <button onclick="openTelegramShare()" class="w-full bg-gradient-to-r from-[#0088cc] to-[#00a2ff] text-white font-bold py-4 rounded-xl shadow-[0_0_20px_rgba(0,136,204,0.3)] active:scale-95 transition-all flex justify-center items-center gap-3 mt-6 relative z-10">
                 <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.223-.548.223l.188-2.85 5.18-4.686c.223-.195-.054-.285-.346-.09l-6.4 4.024-2.76-.86c-.6-.185-.61-.6.125-.89l10.736-4.133c.5-.185.945.11.725.99z"/></svg>
                 <span>Telegram orqali ulashish</span>
             </button>
@@ -199,22 +203,19 @@
     </main>
 
     <footer id="footer-text" class="text-slate-600 text-[11px] mt-6 hidden font-medium tracking-wide">
-        Developed by <span class="text-indigo-400">SmartStudio</span> • 2026
+        Do'stlik Sinovi • 2026
     </footer>
 
     <script>
-        /** * 1. KUTUBXONA VA O'ZGARUVCHILARNI TAYYORLASH
-         */
         const tg = window.Telegram.WebApp;
-        
-        // Ilovani Telegramga moslashtirish
         tg.ready();
         tg.expand();
-        if (tg.setHeaderColor) {
-            tg.setHeaderColor('#0f172a'); // Yuqori qism rangini fon bilan bir xil qilish
-        }
+        if (tg.setHeaderColor) tg.setHeaderColor('#0f172a'); 
 
-        // DOM Elementlari
+        // BU YERDA SIZNING BOTINGIZ NOMI QAT'IY BELGILANDI (Muammo shu yerda edi)
+        const BOT_USERNAME = "DostlikSinov_bot";
+        const USER_ID = tg.initDataUnsafe?.user?.id || Math.floor(Math.random() * 9999999);
+
         const screens = {
             splash: document.getElementById("splash-screen"),
             app: document.getElementById("app-content"),
@@ -225,7 +226,6 @@
             footer: document.getElementById("footer-text")
         };
 
-        // Katta savollar bazasi (Shu yerdan 5 tasi tanlab olinadi)
         const allQuestionsDatabase = [
             { id: 1, text: "Dam olish kuningni qanday o'tkazishni yoqtirasan?", options: ["Uyda kino/serial ko'rib", "Do'stlar bilan ko'chada aylanish", "Uyqu va dam olish", "Kompyuter o'yinlari o'ynash"] },
             { id: 2, text: "Senga qaysi turdagi taom ko'proq yoqadi?", options: ["Milliy taomlar (Palov, Shashlik)", "Fast-food (Burger, Pitsa)", "Shirinliklar va pishiriqlar", "Sog'lom (Diet) ovqatlar"] },
@@ -237,7 +237,6 @@
             { id: 8, text: "Agar super kuching bo'lsa, qaysini tanlarding?", options: ["Uchish qobiliyati", "Odamlar o'yini o'qish", "Vaqtni orqaga qaytarish", "Ko'rinmas bo'lish"] }
         ];
 
-        // Holat o'zgaruvchilari (State)
         const TOTAL_QUESTIONS = 5;
         let selectedQuestions = [];
         let userAnswersData = [];
@@ -245,15 +244,6 @@
         let userName = "";
         let finalGeneratedLink = "";
 
-        // Botning haqiqiy usernamesini olish
-        const BOT_USERNAME = tg.initDataUnsafe?.receiver?.username || "SmartStudio_Test_Bot";
-        const USER_ID = tg.initDataUnsafe?.user?.id || Math.floor(Math.random() * 9999999);
-
-        /**
-         * 2. YORDAMCHI FUNKSIYALAR
-         */
-        
-        // Tasodifiy qorishtirish (Fisher-Yates algoritmi)
         function shuffleArray(array) {
             let curId = array.length;
             while (0 !== curId) {
@@ -266,7 +256,6 @@
             return array;
         }
 
-        // Chiroyli Toast xabar chiqarish
         function showToast(message, type = "success") {
             const container = document.getElementById("toast-container");
             const toast = document.createElement("div");
@@ -281,18 +270,16 @@
             `;
             container.appendChild(toast);
             
-            // Haptic feedback (telefon titrashi)
-            if (type === 'error') tg.HapticFeedback.notificationOccurred('error');
-            else tg.HapticFeedback.notificationOccurred('success');
+            if (tg.HapticFeedback) {
+                type === 'error' ? tg.HapticFeedback.notificationOccurred('error') : tg.HapticFeedback.notificationOccurred('success');
+            }
 
-            // 3 soniyadan keyin o'chirish
             setTimeout(() => {
                 toast.style.animation = "fadeOut 0.3s forwards";
                 setTimeout(() => toast.remove(), 300);
             }, 3000);
         }
 
-        // Ekranlarni almashtirish
         function switchScreen(hideElem, showElem) {
             hideElem.classList.add("hidden");
             hideElem.classList.remove("flex");
@@ -300,11 +287,6 @@
             showElem.classList.add("flex");
         }
 
-        /**
-         * 3. ASOSIY MANTIQ (CORE LOGIC)
-         */
-
-        // Dasturni boshlash (Loader o'chishi)
         setTimeout(() => {
             screens.splash.style.opacity = "0";
             setTimeout(() => {
@@ -312,9 +294,8 @@
                 screens.app.classList.remove("hidden");
                 screens.footer.classList.remove("hidden");
             }, 500);
-        }, 1500); // 1.5 soniya sun'iy kuttirish professional ko'rinishi uchun
+        }, 1500); 
 
-        // 1-Qadam: Ismni tekshirish va Savollarga o'tish
         function startQuiz() {
             const input = document.getElementById("user-name-input");
             const name = input.value.trim();
@@ -326,8 +307,6 @@
             }
 
             userName = name;
-            
-            // Katta bazadan 5 ta savolni tasodifiy tanlab olish
             let shuffledDB = shuffleArray([...allQuestionsDatabase]);
             selectedQuestions = shuffledDB.slice(0, TOTAL_QUESTIONS);
             
@@ -338,9 +317,7 @@
             renderCurrentQuestion();
         }
 
-        // 2-Qadam: Savolni ekranga chizish
         function renderCurrentQuestion() {
-            // Progress barni yangilash
             const progressPercent = ((currentQIndex) / TOTAL_QUESTIONS) * 100;
             document.getElementById("progress-bar-fill").style.width = `${progressPercent}%`;
             document.getElementById("percent-indicator").innerText = `${progressPercent}%`;
@@ -352,11 +329,9 @@
             const optionsContainer = document.getElementById("options-wrapper");
             optionsContainer.innerHTML = "";
 
-            // Variantlarni chiqarish
             qData.options.forEach((optionText, index) => {
                 const btn = document.createElement("button");
                 btn.className = "option-btn w-full text-left bg-slate-900/50 hover:bg-slate-800 border border-slate-700 rounded-xl p-4 flex justify-between items-center cursor-pointer group";
-                // Animatsiya kechikishi (stagger effect)
                 btn.style.animation = `slideInUp 0.3s ease forwards ${(index * 0.1)}s`;
                 btn.style.opacity = "0";
                 
@@ -372,20 +347,15 @@
             });
         }
 
-        // Variant tanlanganda ishlaydigan funksiya
         function handleOptionSelect(btnElement, selectedOptionIndex, optionText) {
-            // Haptic click
-            tg.HapticFeedback.impactOccurred('light');
+            if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
             
-            // Barcha tugmalarni muzlatish (ikki marta bosib yubormaslik uchun)
             const allBtns = document.querySelectorAll('.option-btn');
             allBtns.forEach(b => b.style.pointerEvents = 'none');
 
-            // Tanlangan tugmaga vizual effekt berish
             btnElement.classList.add("border-indigo-500", "bg-indigo-500/20");
             btnElement.querySelector(".opacity-0").classList.remove("opacity-0");
 
-            // Javobni saqlash
             userAnswersData.push({
                 questionId: selectedQuestions[currentQIndex].id,
                 questionText: selectedQuestions[currentQIndex].text,
@@ -393,7 +363,6 @@
                 answerIndex: selectedOptionIndex
             });
 
-            // Keyingi qadamga o'tish (qisqa pauza bilan)
             setTimeout(() => {
                 currentQIndex++;
                 if (currentQIndex < TOTAL_QUESTIONS) {
@@ -401,12 +370,10 @@
                 } else {
                     prepareReviewStep();
                 }
-            }, 400); // 0.4 soniya foydalanuvchi bosganini ko'rishi uchun
+            }, 400); 
         }
 
-        // 3-Qadam: Tanlangan javoblarni ro'yxat qilib ko'rsatish
         function prepareReviewStep() {
-            // Progress barni 100% qilish
             document.getElementById("progress-bar-fill").style.width = `100%`;
             document.getElementById("percent-indicator").innerText = `100%`;
 
@@ -430,43 +397,53 @@
             switchScreen(screens.step2, screens.step3);
         }
 
-        // 4-Qadam: Backendga yuborish (Simulyatsiya) va Link berish
+        function triggerConfetti() {
+            const container = document.getElementById("confetti-layer");
+            container.innerHTML = "";
+            const emojis = ['🎉', '✨', '🔥', '💙', '🚀'];
+            for (let i = 0; i < 15; i++) {
+                let conf = document.createElement("div");
+                conf.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+                conf.style.position = "absolute";
+                conf.style.left = Math.random() * 90 + "%";
+                conf.style.top = Math.random() * 90 + "%";
+                conf.style.fontSize = (10 + Math.random() * 20) + "px";
+                conf.style.animation = `floatEffect ${2 + Math.random() * 3}s ease-in-out infinite`;
+                conf.style.animationDelay = `${Math.random() * 2}s`;
+                container.appendChild(conf);
+            }
+        }
+
         function generateLink() {
-            // Aslida bu yerda serverga fetch() orqali zapros ketadi.
-            // Biz hozir TWA tajribasi uchun vizual yaratamiz.
+            if(tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
             
-            tg.HapticFeedback.notificationOccurred('success');
-            
-            // Tasodifiy ID yaratish (Serverdan kelgan ID o'rniga)
             const randomCode = Math.random().toString(36).substring(2, 10);
             const quizId = `${USER_ID}_${randomCode}`;
             
+            // LINK YARATISH LOGIKASI IDEALLASHTIRILDI
             finalGeneratedLink = `https://t.me/${BOT_USERNAME}?start=${quizId}`;
             
             document.getElementById("generated-link-display").innerText = finalGeneratedLink;
             
             switchScreen(screens.step3, screens.step4);
+            triggerConfetti(); // Bayramona effektni yoqish
             
-            // Asl backend integratsiyasi uchun qoldirilgan kod qismi:
+            // Backend saqlash funksiyasi (agar kerak bo'lsa)
             /*
             fetch('/api/save-quiz', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name: userName, tg_id: USER_ID, answers: userAnswersData })
-            }).then(res => res.json())
-              .then(data => { console.log("Saqlandi"); })
-              .catch(err => { console.error(err); });
+                body: JSON.stringify({ name: userName, tg_id: USER_ID, answers: userAnswersData, code: quizId })
+            });
             */
         }
 
-        // Nusxalash funksiyasi
         function copyGeneratedLink() {
             if (navigator.clipboard && window.isSecureContext) {
                 navigator.clipboard.writeText(finalGeneratedLink).then(() => {
                     showToast("Havola muvaffaqiyatli nusxalandi!");
                 });
             } else {
-                // Eskiroq qurilmalar uchun fallback
                 let textArea = document.createElement("textarea");
                 textArea.value = finalGeneratedLink;
                 textArea.style.position = "fixed";
@@ -475,26 +452,33 @@
                 document.body.appendChild(textArea);
                 textArea.focus();
                 textArea.select();
-                
                 try {
                     document.execCommand('copy');
-                    showToast("Havola muvaffaqiyatli nusxalandi!");
+                    showToast("Havola nusxalandi!");
                 } catch (err) {
-                    showToast("Nusxalashda xatolik yuz berdi", "error");
+                    showToast("Xatolik yuz berdi", "error");
                 }
                 textArea.remove();
             }
         }
 
-        // Telegram Ulashish oynasini chaqirish (ENG ASOSIY QISM)
+        // TELEGRAM ULASHISH LOGIKASI MUKAMMALLASHTIRILDI
         function openTelegramShare() {
-            const shareText = encodeURIComponent(`🔥 ${userName} sizni do'stlik sinoviga chorlaydi!\n\nUni qanchalik yaxshi bilishingizni isbotlang 👇`);
-            const url = encodeURIComponent(finalGeneratedLink);
+            const shareText = `🔥 ${userName} sizni do'stlik sinoviga chorlaydi!\n\nUni qanchalik yaxshi bilishingizni isbotlang 👇`;
             
-            // Telegram rasmiy Share linki orqali TWA ni vaqtinchalik yopib kontaktlar ro'yxatini ochadi
-            const tgShareLink = `https://t.me/share/url?url=${url}&text=${shareText}`;
+            // Havola va matnni URL standartlariga moslab formatlash
+            const urlEncoded = encodeURIComponent(finalGeneratedLink);
+            const textEncoded = encodeURIComponent(shareText);
             
-            tg.openTelegramLink(tgShareLink);
+            const tgShareLink = `https://t.me/share/url?url=${urlEncoded}&text=${textEncoded}`;
+            
+            try {
+                // TWA ning o'zining rasmiy ochish funksiyasi
+                tg.openTelegramLink(tgShareLink);
+            } catch (error) {
+                // Agar eski versiya Telegram bo'lsa, oddiy brauzer kabi ochish (Fallback)
+                window.location.href = tgShareLink;
+            }
         }
     </script>
 </body>
